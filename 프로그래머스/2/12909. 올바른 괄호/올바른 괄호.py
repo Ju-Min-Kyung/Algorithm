@@ -1,17 +1,18 @@
 def solution(s):
-    answer = True
-    
-    stack = []
-    for w in s:
-        if w == "(" :
-            stack.append(w)
+    answer = False
+    stack = [n for n in s]
+    openStack = []
+
+    for k in stack:
+        if k == "(":
+            openStack.append("(")
         else:
-            if stack:
-                stack.pop()
+            if openStack:
+                openStack.pop()
             else:
-                return False
+                return answer
     
-    if not stack:
-        return True
-    else:
-        return False
+    if not openStack:
+        answer = True
+    
+    return answer
