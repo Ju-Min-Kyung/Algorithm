@@ -25,7 +25,7 @@ class Main
 	    
 	    for (int i = 0; i < students.length; i++) {
 	        for (int j = 0; j < students[0].length; j++) {
-	            int rooms = (students[i][j] + 1) / 2;
+	            int rooms = (int) Math.ceil((students[i][j]) / (double) K);
 	            answer += rooms;
 	        }
 	    }
