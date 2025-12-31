@@ -4,73 +4,62 @@ import java.io.*;
 class Main {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder output = new StringBuilder();
 
-        // 테스트케이스 개수
         int T = Integer.parseInt(br.readLine());
-        for (int t = 0; t < T; t++) {
-            // 명령어
-            String command = br.readLine();
-            // 배열 개수
-            int n = Integer.parseInt(br.readLine());
-            // 명령어 입력 
-            String s = br.readLine();
-            Deque < Integer > dq = new ArrayDeque < > ();
 
+        while (T-- > 0) {
+            String command = br.readLine();
+            int n = Integer.parseInt(br.readLine());
+            String s = br.readLine();
+
+            Deque<Integer> dq = new ArrayDeque<>();
+
+            // 배열 파싱
             if (n > 0) {
                 String sub = s.substring(1, s.length() - 1);
-                String[] array = sub.split(",");
-                for (int i = 0; i < array.length; i++) {
-                    dq.addLast(Integer.parseInt(array[i]));
+                StringTokenizer st = new StringTokenizer(sub, ",");
+                while (st.hasMoreTokens()) {
+                    dq.addLast(Integer.parseInt(st.nextToken()));
                 }
             }
 
-
-            int direction = 0; // 0이 앞, 1이 뒤
+            boolean reversed = false;
             boolean error = false;
-            for (int k = 0; k < command.length(); k++) {
-                if (command.charAt(k) == 'R') {
-                    int center = dq.size() / 2;
-                    int temp[] = new int[center];
-                    // 방향 바꾸기
-                    direction = direction == 1 ? 0 : 1;
-                }
-                else {
-                    if (dq.size() > 0) {
-                        if (direction == 0) {
-                            dq.pollFirst();
-                        }
-                        else {
-                            dq.pollLast();
-                        }
-                    }
-                    else {
-                        System.out.println("error");
+
+            // 명령 처리
+            for (int i = 0; i < command.length(); i++) {
+                char c = command.charAt(i);
+
+                if (c == 'R') {
+                    reversed = !reversed;
+                } else { // 'D'
+                    if (dq.isEmpty()) {
+                        output.append("error\n");
                         error = true;
                         break;
                     }
+                    if (!reversed) dq.pollFirst();
+                    else dq.pollLast();
                 }
             }
 
-            if (error) {
-                continue;
-            }
-            StringBuilder sb = new StringBuilder();
+            if (error) continue;
+
+            // 출력
+            output.append("[");
             int size = dq.size();
-            sb.append("[");
-
             for (int i = 0; i < size; i++) {
-                if (direction == 0) {
-                    sb.append(dq.pollFirst());
+                if (!reversed) {
+                    output.append(dq.pollFirst());
+                } else {
+                    output.append(dq.pollLast());
                 }
-                else {
-                    sb.append(dq.pollLast());
-                }
-
-                if (i < size - 1) sb.append(",");
+                if (i < size - 1) output.append(",");
             }
-            sb.append("]");
-            System.out.println(sb.toString());
+            output.append("]\n");
         }
 
+        System.out.print(output.toString());
     }
 }
