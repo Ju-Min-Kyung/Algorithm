@@ -1,37 +1,42 @@
 import java.util.*;
-import java.lang.*;
 import java.io.*;
 
 class Main
 {
-    public static int[] memo;
-	public static void main (String[] args) throws java.lang.Exception
-	{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	
-	    int N = Integer.parseInt(br.readLine());
-	    List<int[]> inputs = new ArrayList<>();
-	    memo = new int[N+1];
-	    
-	    for (int i=0; i < N; i++) {
-	        StringTokenizer st = new StringTokenizer(br.readLine());
-	        int a = Integer.parseInt(st.nextToken());
-	        int b = Integer.parseInt(st.nextToken());
-	        inputs.add(new int[]{a, b});
-	        
-	    }
-	    
-	    for (int i = 0; i < N; i++) {
-	        if (i > 0) memo[i] = Math.max(memo[i], memo[i-1]);
-	        int t = inputs.get(i)[0];
-            int p = inputs.get(i)[1];
+    public static void main(String[] args) throws Exception
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
 
-            int endDay = i + t - 1; 
-            if (endDay < N) {
-                memo[endDay] = Math.max(memo[endDay], p + (i > 0 ? memo[i-1] : 0));
+        int[][] arr = new int[1001][2];
+        for (int i = 1; i <= n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            arr[i][0] = Integer.parseInt(st.nextToken()); // 기간
+            arr[i][1] = Integer.parseInt(st.nextToken()); // 돈
+        }
+
+        long[][] d = new long[1001][2];
+        
+
+        for (int i = 1; i <= n; i++) {
+
+        
+            d[i][1] = Math.max(d[i][1], d[i - 1][1]);
+
+            int end = i + arr[i][0] - 1; // 상담이 끝나는 날
+
+           
+            if (end <= n) {
+                d[end][1] = Math.max(d[end][1], d[i - 1][1] + arr[i][1]);
             }
-	        
-	    }
-	    System.out.println(memo[N-1]);
-	}
+        }
+
+      
+        long answer = d[n][1];
+        for (int i = 1; i <= n; i++) {
+            answer = Math.max(answer, d[i][1]);
+        }
+
+        System.out.println(answer);
+    }
 }
